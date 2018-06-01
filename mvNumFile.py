@@ -10,8 +10,13 @@ def checkFileType(file, phrase):
         return True
     return False
 
+def checkFileName(file, provider):
 
-def mvFiles(num,oldPath,newPath, ext):
+    if provider.search(file):
+        return True
+    return False
+
+def mvFiles(num,oldPath,newPath, ext, provider):
 
     #creates the list of files in the old directory
     Files = os.listdir(oldPath)
@@ -19,14 +24,30 @@ def mvFiles(num,oldPath,newPath, ext):
     #initiates the list that will contain all the files we want to look at
     listOfFiles =[]
 
-    #looks for files with correct ext
-    if ext == 'none' or ext == "None":
+    #looks for files with correct ext and provider
+    if (ext == 'all' or ext == "All") and (provider == "none" or provider == "None"):
         listOfFiles = Files
-    else:
+    elif (ext != 'all' or ext != "All") and (provider == "none" or provider == "None"):
         TheExt = re.compile("."+ext)
+        TheProvider = re.compile("^[0-9]{12}"+provider)
         count = 0
         for file in Files:
             if checkFileType(file,TheExt):
+                listOfFiles.append(file)
+            count+=1
+    elif (ext == 'all' or ext == "All") and (provider != "none" or provider != "None"):
+        TheProvider = re.compile("^[0-9]{12}"+provider)
+        count = 0
+        for file in Files:
+            if checkFileName(file,TheProvider) :
+                listOfFiles.append(file)
+            count+=1
+    else:
+        TheExt = re.compile("."+ext)
+        TheProvider = re.compile("^[0-9]{12}"+provider)
+        count = 0
+        for file in Files:
+            if checkFileType(file,TheExt) and checkFileName(file,TheProvider):
                 listOfFiles.append(file)
             count+=1
 
@@ -54,5 +75,5 @@ def mvFiles(num,oldPath,newPath, ext):
     if flag:
         print "Files transfered: Enough files were provided."
     else:
-        print  "Files transfered: Not enough files for the request, only transferd "+str(count)+\
-        " file."
+        print  "Files transfered: Not enough files for the request, only transferd "\
+        +str(count)+" file."
