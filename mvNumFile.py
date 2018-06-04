@@ -16,6 +16,8 @@ def checkFileName(file, provider):
         return True
     return False
 
+#Takes in number of files, the old directory, new directory, type of file and the TheProvider
+#code that that needs to be moved and transfered
 def mvFiles(num,oldPath,newPath, ext, provider):
 
     #creates the list of files in the old directory
